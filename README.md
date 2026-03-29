@@ -8,6 +8,7 @@
     <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js" alt="Next.js" /></a>
     <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript" alt="TypeScript" /></a>
     <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-DB-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" /></a>
+    <a href="https://ai.google.dev/"><img src="https://img.shields.io/badge/Google%20Gemini-OCR-4285F4?style=flat-square&logo=google&logoColor=white" alt="Gemini" /></a>
   </p>
 </div>
 
@@ -42,6 +43,7 @@ Built with an ultra-reliable inline-styling UI architecture, it guarantees a cle
 | **Styling** | React Native/CSS Inline Styles (Custom SaaS Tokens) |
 | **Authentication** | NextAuth.js (Session-based JWT) |
 | **Database** | Supabase (PostgreSQL) |
+| **AI (OCR)** | Google Gemini |
 | **Icons** | Native Unicode/Emoji Library |
 
 <br />
