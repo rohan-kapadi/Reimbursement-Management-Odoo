@@ -1,0 +1,28 @@
+
+> temp-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.199.83.87:3000
+- Environments: .env
+✓ Ready in 423ms
+
+⨯ Error [PrismaClientConstructorValidationError]: Unknown property datasourceUrl provided to PrismaClient constructor.
+Read more at https://pris.ly/d/client-constructor
+    at makePrismaClient (src\lib\prisma.ts:16:10)
+    at module evaluation (src\lib\prisma.ts:22:29)
+    at module evaluation (src\lib\auth.ts:5:1)
+    at module evaluation (src\app\api\register\route.ts:4:1)
+    at Object.<anonymous> (C:\Rohan\Projects\Odoo x VIT\.next\dev\server\app\api\register\route.js:5:3)
+  14 |   }
+  15 |
+> 16 |   return new PrismaClient({
+     |          ^
+  17 |     datasourceUrl: databaseUrl,
+  18 |   })
+  19 | } {
+  page: '/api/register'
+}
+ POST /api/register 500 in 1213ms (next.js: 912ms, application-code: 301ms)
+^C^C
