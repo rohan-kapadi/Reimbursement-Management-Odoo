@@ -15,36 +15,54 @@
 <br />
 
 ## ✨ The Vision
-**ReimburseX** (built for Odoo × VIT) eliminates the friction of traditional expense reporting. Using OCR AI, multi-currency live conversions, and a dynamic approval pipeline, it streamlines how companies track, approve, and reimburse employee spending.
+**ReimburseX** (built for Odoo × VIT) eliminates the friction of traditional expense reporting. Using OCR scanning powered by Gemini AI, multi-currency live conversions, and a dynamic approval pipeline, it streamlines how companies track, approve, and reimburse employee spending.
 
-Built with an ultra-reliable inline-styling UI architecture, it guarantees a clean, premium, and pixel-perfect SaaS experience instantly on any device.
+The application is built using an ultra-reliable **inline-styling UI architecture**, bypassing the brittleness of traditional CSS utility class compilers. This guarantees a clean, premium, and pixel-perfect SaaS experience instantly on any device or edge deployment server without build-step styling conflicts.
 
 <br />
 
-## 🚀 Key Features
+## 🚀 Core Workflows
 
-* **🪄 AI Receipt Extraction (OCR):** Upload a receipt, and AI automatically grabs the merchant, amount, date, and category.
-* **🌍 Live Currency Exchange:** Specify the claim currency, and it auto-estimates the value against your company's base currency using real-time API integrations.
-* **🔗 Dynamic Approval Workflows:** Configure up to three sequential approval layers for claims (e.g. built-in Manager & Admin tiers).
-* **📊 Role-Based Dashboards:** 
-  * `Admin`: Manage teams, adjust approval chains, and view company-wide financial health.
-  * `Manager`: Review expense queues, approve/reject claims, and monitor direct reports.
-  * `Employee`: Submit, monitor, and revise expense claims securely.
-* **⚡ Inline-Style Rendering Architecture:** Bypasses conventional utility class build steps to guarantee 100% stable UI rendering across any edge deployment.
+### 🪄 AI Receipt Extraction (OCR)
+Instead of manually typing out bill details, employees simply take a picture or upload their receipt (`.png`, `.jpg`, `.webp`). 
+* The image is compressed securely in the browser.
+* It is passed to **Google Gemini AI**, which parses the image using system prompts to extract structured JSON data.
+* `Merchant`, `Amount`, `Date`, and `Category` auto-fill directly into the submission form.
+
+### 🌍 Multi-Currency Live Conversion
+When an employee travels internationally, they can submit the claim in the local currency (e.g., EUR or INR). 
+* The app queries the real-time **ExchangeRate-API** to provide instant conversion estimates against the company's mapped base currency.
+* This ensures Admins and Managers view the accurate financial impact of the bill on the company's unified dashboard.
+
+### 🔗 Dynamic Approval Chains
+Companies can enforce multi-layered approval chains to combat fraud and enforce budgets. 
+* Configurable by the `Admin` up to three customized approval stops.
+* The first stop is dynamically mapped to the employee's assigned `Team Manager`.
+* Once approved by the initial layer, it sequentially escalates to higher assigned layers until fully `APPROVED`.
+* If rejected at any point, a mandatory rejection comment is recorded, and the ticket is sent back to the employee for fixes/resubmission.
+
+<br />
+
+## 👥 Role-Based Capabilities
+
+| Role | Capabilities |
+| :--- | :--- |
+| **👑 Admin** | Creates the company workspace, configures the base currency, builds teams, adds/deletes managers and employees, designs the workflow pipeline layers, and views top-level financial statistics (total company-wide pending and approved costs). |
+| **👔 Manager** | Responsible for their assigned team. Views an active approval queue of un-actioned expenses. Can instantly approve or enforce a hard-reject with mandatory feedback commentary. |
+| **👤 Employee** | Uploads receipts, submits expense tickets, monitors their claim status (Pending/Approved/Rejected) via real-time badges, and can edit & resubmit rejected claims based on manager feedback. |
 
 <br />
 
 ## 🛠️ Technology Stack
 
-| Category | Technology |
-| :--- | :--- |
-| **Framework** | Next.js 15 (App Router) |
-| **Language** | TypeScript |
-| **Styling** | React Native/CSS Inline Styles (Custom SaaS Tokens) |
-| **Authentication** | NextAuth.js (Session-based JWT) |
-| **Database** | Supabase (PostgreSQL) |
-| **AI (OCR)** | Google Gemini |
-| **Icons** | Native Unicode/Emoji Library |
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | Next.js 15 (App Router) | Core server/client routing and API handling. |
+| **Language** | TypeScript | Strict type safety for the domain models (Users, Companies, Expenses). |
+| **Styling** | React Inline Styles | Enforces 100% reliable rendering aesthetics without Tailwind dependencies. Includes custom SaaS glass-panel logic and animated focus rings. |
+| **Authentication** | NextAuth.js | Secure session-based JWTs mapping directly to database user credentials. |
+| **Database** | Supabase (PostgreSQL) | Stores the highly relational data configuration spanning multiple tables securely. |
+| **AI (OCR)** | Google Gemini API | Handles generative vision detection for high fidelity automated form-filling. |
 
 <br />
 
@@ -62,27 +80,46 @@ npm install
 ```
 
 ### 3. Setup Environment Variables
-Duplicate the `.env.example` file to create your local `.env` configuration.
+Duplicate the `.env.example` file to create your local `.env.local` configuration.
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
-_Ensure you fill in your Supabase Keys, NextAuth secrets, and OCR endpoints inside the `.env` file before running._
+
+You will need to populate the following variables:
+* `NEXTAUTH_URL="http://localhost:3000"`
+* `NEXTAUTH_SECRET="..."` (Generate using `openssl rand -base64 32`)
+* `NEXT_PUBLIC_SUPABASE_URL="..."`
+* `SUPABASE_SERVICE_ROLE_KEY="..."`
+* `GEMINI_API_KEY="..."` (For the OCR engine functionality)
 
 ### 4. Run the Development Server
 ```bash
 npm run dev
 ```
-Navigate to [http://localhost:3000](http://localhost:3000) to view the application.
+Navigate to [http://localhost:3000](http://localhost:3000) to view the application. 
+
+_Pro Tip: You can create your company directly from the sign-up panel on the landing page, which automatically bootstraps your account as an `Admin`._
 
 <br />
 
-## 🏗️ Project Structure
+## 🏗️ Project Architecture Layout
 ```text
 /src
-├── app/                  # Next.js 15 App Router pages (admin, employee, manager)
-├── components/           # UI Components (Inline styled widgets, Dashboards)
-├── lib/                  # Utilities, OCR processors, Supabase & NextAuth clients
-└── types/                # Core TypeScript definitions (DB schema)
+├── app/                      # Next.js 15 App Router views
+│   ├── api/                  # Backend endpoints (auth, OCR processing)
+│   ├── dashboard/            # Protective dashboard routes
+│   │   ├── admin/            # Admin capability views
+│   │   ├── employee/         # Employee capability views
+│   │   └── manager/          # Manager capability views
+│   └── page.tsx              # Public SaaS landing marketing page
+├── components/               # UI Components
+│   └── ...                   # Reusable inline-styled widgets, tables, and nav shells
+├── lib/                      # Core logic
+│   ├── actions/              # Server actions (Database mutations for expenses/approvals)
+│   ├── utils/                # Helper functions (Image compression before AI passes)
+│   └── supabase.ts           # Supabase Admin connectivity
+└── types/                    # Core TypeScript definitions
+    └── db.ts                 # Enforcing Supabase table schemas via TypeScript interfaces
 ```
 
 <br />
